@@ -1,15 +1,18 @@
 
 const YEAR_HEIGHT = getWidthInDom('2022AD')[1]
+const SHOW_TIME = true
 
 const parsedTimes = parseTimes(times)
 
 const timeline = document.getElementById('timeline')
+let maxHeight = 0
 
 // Calc height and weight
 ;(() => {
   let canvasHeight = 0
   let canvasWidth = 0
   for (const y in parsedTimes) {
+    maxHeight = Math.max(maxHeight, parsedTimes[y].height)
     canvasHeight = Math.max(canvasHeight, parsedTimes[y].height)
     // text width + padding + line width
     canvasWidth += parsedTimes[y].width + 20 + 2
@@ -25,15 +28,15 @@ const timeline = document.getElementById('timeline')
 // Start rendering
 ;(() => {
   let renderedWidth = 0
+  const height = maxHeight + 20 + 2;
   for (const y in parsedTimes) {
     const splitLineEl = document.createElement('span')
-    const splitLineElStyleHeight = parsedTimes[y].height + 20 + 2;
     const splitLineElStyle = {
       'position': 'absolute',
       'top': '0',
       'left': `${renderedWidth}px`,
       'width': '2px',
-      'height': `${parsedTimes[y].height + 20 + 2}px`,
+      'height': `${height}px`,
       'background-color': '#000',
     }
     splitLineEl.setAttribute('style', styleObject2String(splitLineElStyle))
@@ -42,12 +45,43 @@ const timeline = document.getElementById('timeline')
     const yearEl = document.createElement('span')
     const yearElStyle = {
       'position': 'absolute',
-      'top': `${splitLineElStyleHeight}px`,
+      'top': `${height}px`,
       'left': `${renderedWidth}px`,
     }
     yearEl.innerText = y
     yearEl.setAttribute('style', styleObject2String(yearElStyle))
     timeline.appendChild(yearEl)
+
+    const downLineEl = document.createElement('span')
+    const downLineElStyle = {
+      'position': 'absolute',
+      'top': `${height - 2}px`,
+      'left': `${renderedWidth + 2}px`,
+      'width': `${parsedTimes[y].width + 20}px`,
+      'height': '2px',
+      'background-color': '#000',
+    }
+    downLineEl.setAttribute('style', styleObject2String(downLineElStyle))
+    timeline.appendChild(downLineEl)
+
+    let renderedHeight = 0
+    for (const e of parsedTimes[y].events) {
+      const msgEl = document.createElement('span')
+      const msgElStyle = {
+        'position': 'absolute',
+        'top': `${renderedHeight}px`,
+        'left': `${renderedWidth + 2}px`,
+        'width': 'fit-content',
+        'max-width': '300px',
+        'padding': '3px',
+        'border': '1px solid #000',
+      }
+      msgEl.innerText = e.msg
+      msgEl.setAttribute('style', styleObject2String(msgElStyle))
+      timeline.appendChild(msgEl)
+      renderedHeight += msgEl.clientHeight + 20
+    }
+    renderedWidth += parsedTimes[y].width + 20 + 2
   }
 })()
 
@@ -98,19 +132,19 @@ function parseTimes(t) {
       split[i] = n
     }
 
-    const wh = getWidthInDom(con.msg, true)
+    const message = SHOW_TIME ? `${split.join('.')}\n${con.msg}` : con.msg
+    const wh = getWidthInDom(message, true)
     if (res[split[0]] === undefined) {
       res[split[0]] = {
-        events: [{ time: split, msg: con.msg }],
+        events: [{ time: split, msg: message }],
         width: wh[0],
         height: wh[1],
       }
     } else {
-      res[split[0]].events.push({ time: split, msg: con.msg })
+      res[split[0]].events.push({ time: split, msg: message })
       if (wh[0] > res[split[0]].width)
         res[split[0]].width = wh[0]
-      if (wh[1] > res[split[0]].height)
-        res[split[0]].height = wh[1]
+      res[split[0]].height += wh[1]
     }
   }
   for (const y in res)
