@@ -85,6 +85,15 @@ let maxHeight = 0
   }
 })()
 
+// Scroll
+;(() => {
+  const root = document.documentElement
+  root.addEventListener('wheel', e => {
+    e.preventDefault()
+    root.scrollLeft += e.deltaY
+  }, { passive: false })
+})()
+
 function styleObject2String(obj) {
   let res = ''
   for (const key in obj)
