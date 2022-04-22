@@ -1,4 +1,6 @@
 
+const YEAR_HEIGHT = getWidthInDom('2022AD')[1]
+
 const parsedTimes = parseTimes(times)
 
 const timeline = document.getElementById('timeline')
