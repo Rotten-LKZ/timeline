@@ -6,26 +6,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>时间表</title>
   <style>
-    canvas {
+    #timeline {
       border: 1px solid black;
       margin-top: 50px;
+      position: relative;
     }
 
-    .text-width-calc {
-      white-space: normal !important;
+    .text-calc {
+      white-space: nowrap;
       visibility: hidden !important;
       width: fit-content !important;
+    }
+
+    .text-calc-msg {
+      white-space: normal !important;
       max-width: 300px !important;
-      padding: 3px;
-      border: 1px solid black;
+      padding: 3px !important;
+      border: 1px solid black !important;
     }
   </style>
 </head>
 <body>
-  <canvas id="timeline" height="100">
-    如果您看到了这条消息，说明您的浏览器已经过时暂不支持本网站。<br/>
-    If you see this message, your browser is out of date and doesn't support this website.
-  </canvas>
+  <div id="timeline"></canvas>
   <script src="./times.js"></script>
   <script src="./script.js"></script>
 </body>

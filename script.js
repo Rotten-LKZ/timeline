@@ -2,37 +2,71 @@
 const parsedTimes = parseTimes(times)
 
 const timeline = document.getElementById('timeline')
-// calc height and weight
-let canvasHeight = 0
-let canvasWidth = 0
-for (const y in parsedTimes) {
-  canvasHeight = Math.max(canvasHeight, parsedTimes[y].height)
-  // text width + padding + line width
-  canvasWidth += parsedTimes[y].width + 20 + 2
+
+// Calc height and weight
+;(() => {
+  let canvasHeight = 0
+  let canvasWidth = 0
+  for (const y in parsedTimes) {
+    canvasHeight = Math.max(canvasHeight, parsedTimes[y].height)
+    // text width + padding + line width
+    canvasWidth += parsedTimes[y].width + 20 + 2
+  }
+
+  // 2 is the height of timeline + years' height + padding
+  canvasHeight += 2 + YEAR_HEIGHT + 20
+  canvasWidth += 2
+  timeline.setAttribute('style', `width: ${canvasWidth}px; height: ${canvasHeight}px;`)
+})()
+
+
+// Start rendering
+;(() => {
+  let renderedWidth = 0
+  for (const y in parsedTimes) {
+    const splitLineEl = document.createElement('span')
+    const splitLineElStyleHeight = parsedTimes[y].height + 20 + 2;
+    const splitLineElStyle = {
+      'position': 'absolute',
+      'top': '0',
+      'left': `${renderedWidth}px`,
+      'width': '2px',
+      'height': `${parsedTimes[y].height + 20 + 2}px`,
+      'background-color': '#000',
+    }
+    splitLineEl.setAttribute('style', styleObject2String(splitLineElStyle))
+    timeline.appendChild(splitLineEl)
+
+    const yearEl = document.createElement('span')
+    const yearElStyle = {
+      'position': 'absolute',
+      'top': `${splitLineElStyleHeight}px`,
+      'left': `${renderedWidth}px`,
+    }
+    yearEl.innerText = y
+    yearEl.setAttribute('style', styleObject2String(yearElStyle))
+    timeline.appendChild(yearEl)
+  }
+})()
+
+function styleObject2String(obj) {
+  let res = ''
+  for (const key in obj)
+    res += `${key}: ${obj[key]}; `
+  return res
 }
 
-// 2 is the height of timeline + years' height
-canvasHeight += 2 + getWidthInDom('2022AD')[1]
-canvasWidth += 2
-timeline.width = canvasWidth
-timeline.height = canvasHeight
-
-
-if (timeline.getContext) {
-  const ctx = timeline.getContext('2d')
-  
-}
-
-function getWidthInDom(str) {
+function getWidthInDom(str, isMsg) {
   const el = document.createElement('div')
-  el.className = 'text-width-calc'
+  el.classList.add('text-calc')
+  if (isMsg === true) el.classList.add('text-calc-msg')
   el.innerText = str
   document.documentElement.appendChild(el)
   const width = el.clientWidth
   const height = el.clientHeight
   el.remove()
   // 20px is the padding
-  return [width, height + 20]
+  return isMsg ? [width, height + 20] : [width, height]
 }
 
 function parseTimes(t) {
@@ -62,7 +96,7 @@ function parseTimes(t) {
       split[i] = n
     }
 
-    const wh = getWidthInDom(con.msg)
+    const wh = getWidthInDom(con.msg, true)
     if (res[split[0]] === undefined) {
       res[split[0]] = {
         events: [{ time: split, msg: con.msg }],
