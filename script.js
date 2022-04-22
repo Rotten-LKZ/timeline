@@ -23,7 +23,7 @@ function parseTimes(t) {
     const split = con.time.split('.')
 
     // year
-    if (split[0].endsWith('AD') || split[0].endsWith('BC')) {
+    if (!(split[0].endsWith('AD') || split[0].endsWith('BC'))) {
       const n0 = parseInt(split[0])
       if (isNaN(n0)) {
         console.error('Invalid year: ' + split[0])
@@ -54,4 +54,5 @@ function parseTimes(t) {
       res[split[0]].width += getWidthInDom(con.msg)
     }
   }
+  return res
 }
