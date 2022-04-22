@@ -12,14 +12,17 @@
     }
 
     .text-width-calc {
-      white-space: nowrap !important;
+      white-space: normal !important;
       visibility: hidden !important;
       width: fit-content !important;
+      max-width: 300px !important;
+      padding: 3px;
+      border: 1px solid black;
     }
   </style>
 </head>
 <body>
-  <canvas id="timeline" height="100" width="500">
+  <canvas id="timeline" height="100">
     如果您看到了这条消息，说明您的浏览器已经过时暂不支持本网站。<br/>
     If you see this message, your browser is out of date and doesn't support this website.
   </canvas>

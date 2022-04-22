@@ -2,6 +2,22 @@
 const parsedTimes = parseTimes(times)
 
 const timeline = document.getElementById('timeline')
+// calc height and weight
+let canvasHeight = 0
+let canvasWidth = 0
+for (const y in parsedTimes) {
+  canvasHeight = Math.max(canvasHeight, parsedTimes[y].height)
+  // text width + padding + line width
+  canvasWidth += parsedTimes[y].width + 20 + 2
+}
+
+// 2 is the height of timeline + years' height
+canvasHeight += 2 + getWidthInDom('2022AD')[1]
+canvasWidth += 2
+timeline.width = canvasWidth
+timeline.height = canvasHeight
+
+
 if (timeline.getContext) {
   const ctx = timeline.getContext('2d')
   
@@ -13,8 +29,10 @@ function getWidthInDom(str) {
   el.innerText = str
   document.documentElement.appendChild(el)
   const width = el.clientWidth
+  const height = el.clientHeight
   el.remove()
-  return width
+  // 20px is the padding
+  return [width, height + 20]
 }
 
 function parseTimes(t) {
@@ -44,15 +62,22 @@ function parseTimes(t) {
       split[i] = n
     }
 
+    const wh = getWidthInDom(con.msg)
     if (res[split[0]] === undefined) {
       res[split[0]] = {
         events: [{ time: split, msg: con.msg }],
-        width: getWidthInDom(con.msg)
+        width: wh[0],
+        height: wh[1],
       }
     } else {
       res[split[0]].events.push({ time: split, msg: con.msg })
-      res[split[0]].width += getWidthInDom(con.msg)
+      if (wh[0] > res[split[0]].width)
+        res[split[0]].width = wh[0]
+      if (wh[1] > res[split[0]].height)
+        res[split[0]].height = wh[1]
     }
   }
+  for (const y in res)
+    res[y].height += 20
   return res
 }
