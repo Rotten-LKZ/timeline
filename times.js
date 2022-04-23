@@ -1,3 +1,14 @@
+/**
+ * Times
+ * Just need to declare a variable times
+ * This variable is an array of objects
+ * Each object has two properties:
+ * - time: the time of the event in the format of '[-]YYYY[BC | AD][.MM.DD]'
+ *        BC or AD means before or after Christ and negative numbers are BC
+ *        e.g. '-1234.12.31' '1234BC' '1234.12' '2023AD.12.31'
+ * - msg: the message of the event
+ */
+
 const times = [
   { time: '2020', msg: 'Two years ago' },
   { time: '2021', msg: 'One year ago' },
