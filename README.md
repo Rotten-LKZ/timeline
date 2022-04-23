@@ -20,3 +20,5 @@ And it will render:
 ## Options
 
 If you don't want to show time on every event, you can open `script.js` and make the value of constant `SHOW_TIME` false.
+
+![preview with SHOW_TIME false](https://cdn.jsdelivr.net/gh/Rotten-LKZ/cdn@main/images/project/timeline/timeline-view-with-SHOW_TIME-false-9a93f4.png)
