@@ -7,6 +7,10 @@
  *        BC or AD means before or after Christ and negative numbers are BC
  *        e.g. '-1234.12.31' '1234BC' '1234.12' '2023AD.12.31'
  * - msg: the message of the event
+ * Or you can give only a string:
+ *    time|msg
+ *    e.g. '-1234.12.31|This is a message'
+ * You have to sort them by time
  */
 
 const times = [
@@ -16,4 +20,5 @@ const times = [
   { time: '2022.4.22', msg: 'Try archieving the idea' },
   { time: '2022.4.23', msg: 'Complete first version' },
   { time: '2023', msg: 'What I will be' },
+  '2024|Hello, Two years in the future',
 ]

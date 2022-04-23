@@ -116,7 +116,12 @@ function getWidthInDom(str, isMsg) {
 
 function parseTimes(t) {
   let res = {}
-  for (const con of t) {
+  for (let con of t) {
+    if (typeof con === 'string') {
+      const _con = con.split('|')
+      con = { time: _con[0], msg: _con[1] }
+    }
+
     const split = con.time.split('.')
 
     // year
